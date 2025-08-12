@@ -23,11 +23,13 @@
 .chatgpt-nav-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: 16px 20px;
   background: #181818;
   border-bottom: 1px solid #444;
-  min-height: 60px;
+  min-height: 53px;
+  height: 53px;
+  max-height: 53px;
   gap: 12px;
 }
 
@@ -41,16 +43,16 @@
 .chatgpt-nav-toggle {
   background: none;
   border: none;
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: ew-resize;
+  cursor: e-resize;
   color: #AFAFAF;
   font-size: 16px;
   transition: all 0.2s ease;
-  border-radius: 4px;
+  border-radius: 6px;
   flex-shrink: 0;
   position: relative;
   outline: none;
@@ -62,11 +64,10 @@
 }
 
 .chatgpt-nav-sidebar:not(.collapsed) .chatgpt-nav-toggle:hover::after {
-  content: 'Toggle sidebar';
+  content: 'Close sidebar';
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 0;
   background: #000;
   color: white;
   padding: 6px 8px;
@@ -79,19 +80,7 @@
 }
 
 .chatgpt-nav-sidebar.collapsed .chatgpt-nav-toggle:hover::after {
-  content: 'Open sidebar';
-  position: absolute;
-  top: 50%;
-  left: -100px;
-  transform: translateY(-50%);
-  background: #000;
-  color: white;
-  padding: 6px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 1000;
-  pointer-events: none;
+  display: none;
 }
 
 .chatgpt-nav-content {
@@ -188,11 +177,13 @@
 .chatgpt-nav-search {
   padding: 12px 16px;
   border-bottom: 1px solid #333;
+  position: relative;
+  outline: none;
 }
 
 .search-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 12px 8px 36px;
   background: #2a2a2a;
   border: 1px solid #444;
   border-radius: 6px;
@@ -202,8 +193,20 @@
   transition: border-color 0.2s ease;
 }
 
+.search-icon {
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
 .search-input:focus {
   border-color: #4a90e2;
+  outline: none;
 }
 
 .search-input::placeholder {
@@ -213,7 +216,6 @@
 /* Pinned prompts section */
 .chatgpt-nav-pinned {
   display: none;
-  border-bottom: 1px solid #333;
 }
 
 .pinned-header {
@@ -278,7 +280,7 @@
   border: 1px solid #404040;
   border-radius: 50%;
   color: #ffffff;
-  cursor: pointer;
+  cursor: w-resize;
   display: none;
   align-items: center;
   justify-content: center;

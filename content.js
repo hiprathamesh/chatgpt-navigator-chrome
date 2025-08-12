@@ -61,20 +61,24 @@ class ChatGPTNavigator {
     this.sidebar = document.createElement('div');
     this.sidebar.id = 'chatgpt-navigator-sidebar';
     this.sidebar.className = 'chatgpt-nav-sidebar';
-    
+
     // Create sidebar content
     this.sidebar.innerHTML = `
       <div class="chatgpt-nav-header">
+        <h3>Chat Navigation</h3>
         <button class="chatgpt-nav-toggle" id="chatgpt-nav-toggle">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="4" width="16" height="16" rx="3" ry="3" stroke="currentColor" stroke-width="2" fill="none"/>
-            <line x1="9" y1="4" x2="9" y2="20" stroke="currentColor" stroke-width="2"/>
+          <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.727273" y="0.727273" width="14.5455" height="12.8485" rx="3.15151" stroke="#AFAFAF" stroke-width="1.45455"/>
+            <line x1="5.57639" y1="1.45508" x2="5.57639" y2="12.849" stroke="#AFAFAF" stroke-width="1.45455"/>
           </svg>
         </button>
-        <h3>Chat Navigation</h3>
       </div>
       <div class="chatgpt-nav-content">
         <div class="chatgpt-nav-search">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
           <input type="text" placeholder="Search chats..." id="chatgpt-nav-search-input" class="search-input">
         </div>
         <div class="chatgpt-nav-pinned" id="chatgpt-nav-pinned"></div>
@@ -105,18 +109,18 @@ class ChatGPTNavigator {
     floatingButton.id = 'chatgpt-nav-floating-button';
     floatingButton.className = 'chatgpt-nav-floating-button';
     floatingButton.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="4" y="4" width="16" height="16" rx="3" ry="3" stroke="currentColor" stroke-width="2" fill="none"/>
-        <line x1="9" y1="4" x2="9" y2="20" stroke="currentColor" stroke-width="2"/>
+      <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.727273" y="0.727273" width="14.5455" height="12.8485" rx="3.15151" stroke="currentColor" stroke-width="1.45455"/>
+        <line x1="5.57639" y1="1.45508" x2="5.57639" y2="12.849" stroke="currentColor" stroke-width="1.45455"/>
       </svg>
     `;
-    
+
     floatingButton.addEventListener('click', () => {
       this.toggleSidebar();
     });
-    
+
     document.body.appendChild(floatingButton);
-    
+
     // Show floating button if sidebar is collapsed
     if (this.isCollapsed) {
       floatingButton.classList.add('show');
@@ -148,7 +152,7 @@ class ChatGPTNavigator {
     const toggleBtn = document.getElementById('chatgpt-nav-toggle');
     const toggleIcon = toggleBtn.querySelector('svg');
     const floatingButton = document.getElementById('chatgpt-nav-floating-button');
-    
+
     if (this.isCollapsed) {
       this.sidebar.classList.add('collapsed');
       // Rotate icon 180 degrees when collapsed
@@ -174,9 +178,9 @@ class ChatGPTNavigator {
     const toggleBtn = document.getElementById('chatgpt-nav-toggle');
     const toggleIcon = toggleBtn.querySelector('svg');
     const floatingButton = document.getElementById('chatgpt-nav-floating-button');
-    
+
     toggleIcon.style.transform = 'rotate(180deg)';
-    
+
     // Show floating button
     if (floatingButton) {
       floatingButton.classList.add('show');
@@ -185,9 +189,9 @@ class ChatGPTNavigator {
 
   startObserving() {
     // Observe changes in the chat container
-    const chatContainer = document.querySelector('[role="main"]') || 
-                         document.querySelector('.conversation-turns') ||
-                         document.body;
+    const chatContainer = document.querySelector('[role="main"]') ||
+      document.querySelector('.conversation-turns') ||
+      document.body;
 
     this.observer = new MutationObserver((mutations) => {
       let shouldRescan = false;
@@ -237,7 +241,7 @@ class ChatGPTNavigator {
     ];
 
     let userMessages = [];
-    
+
     for (const selector of promptSelectors) {
       userMessages = document.querySelectorAll(selector);
       if (userMessages.length > 0) break;
@@ -249,8 +253,8 @@ class ChatGPTNavigator {
       userMessages = Array.from(allGroups).filter(el => {
         const text = el.textContent.trim();
         const hasUserIndicator = el.querySelector('[title*="user"], [alt*="user"], .user') ||
-                                el.textContent.includes('You:') ||
-                                el.getAttribute('data-message-author-role') === 'user';
+          el.textContent.includes('You:') ||
+          el.getAttribute('data-message-author-role') === 'user';
         return text.length > 0 && (hasUserIndicator || this.looksLikeUserMessage(el));
       });
     }
@@ -262,18 +266,18 @@ class ChatGPTNavigator {
     // Heuristic to identify user messages based on common patterns
     const parent = element.closest('.group, [class*="message"]');
     if (!parent) return false;
-    
+
     // Look for patterns that suggest this is a user message
     const hasAvatarPattern = parent.querySelector('img[src*="avatar"], [class*="avatar"]');
     const position = Array.from(parent.parentNode.children).indexOf(parent);
-    
+
     // User messages often appear in odd positions (0, 2, 4, etc.) in many chat layouts
     return position % 2 === 0;
   }
 
   updatePromptsList(messageElements) {
     const promptsContainer = document.getElementById('chatgpt-nav-prompts');
-    
+
     if (messageElements.length === 0) {
       promptsContainer.innerHTML = '<div class="no-prompts">No prompts found</div>';
       return;
@@ -297,7 +301,7 @@ class ChatGPTNavigator {
   filterPrompts() {
     const promptsContainer = document.getElementById('chatgpt-nav-prompts');
     const allPromptItems = promptsContainer.querySelectorAll('.chatgpt-nav-prompt-item');
-    
+
     allPromptItems.forEach(item => {
       const text = item.querySelector('.prompt-text').textContent.toLowerCase();
       if (text.includes(this.searchTerm)) {
@@ -311,20 +315,20 @@ class ChatGPTNavigator {
   updatePinnedPrompts() {
     const pinnedContainer = document.getElementById('chatgpt-nav-pinned');
     pinnedContainer.innerHTML = '';
-    
+
     if (this.pinnedPrompts.length === 0) {
       pinnedContainer.style.display = 'none';
       return;
     }
-    
+
     pinnedContainer.style.display = 'block';
-    
+
     // Add pinned section header
     const header = document.createElement('div');
     header.className = 'pinned-header';
     header.textContent = 'Pinned Chats';
     pinnedContainer.appendChild(header);
-    
+
     this.pinnedPrompts.forEach((pinnedPrompt, index) => {
       const item = this.createPinnedPromptItem(pinnedPrompt.text, pinnedPrompt.number, true);
       pinnedContainer.appendChild(item);
@@ -333,7 +337,7 @@ class ChatGPTNavigator {
 
   togglePin(promptText, element, number) {
     const existingIndex = this.pinnedPrompts.findIndex(p => p.text === promptText);
-    
+
     if (existingIndex !== -1) {
       // Unpin
       this.pinnedPrompts.splice(existingIndex, 1);
@@ -345,10 +349,10 @@ class ChatGPTNavigator {
       this.showMessage('Maximum 3 chats can be pinned per conversation');
       return;
     }
-    
+
     // Save to localStorage per chat
     this.savePinnedPromptsForCurrentChat();
-    
+
     this.updatePinnedPrompts();
     this.updatePromptsPinStatus();
   }
@@ -356,21 +360,21 @@ class ChatGPTNavigator {
   updatePromptsPinStatus() {
     const promptsContainer = document.getElementById('chatgpt-nav-prompts');
     const allPromptItems = promptsContainer.querySelectorAll('.chatgpt-nav-prompt-item');
-    
+
     allPromptItems.forEach(item => {
       const text = item.querySelector('.prompt-text').textContent;
       const pinBtn = item.querySelector('.pin-button');
       const isPinned = this.pinnedPrompts.some(p => p.text === text);
-      
+
       if (pinBtn) {
-        const pinIcon = isPinned 
+        const pinIcon = isPinned
           ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                <path d="M16 12V4H17V2H7V4H8V12L6 14V16H11V22H13V16H18V14L16 12Z"/>
              </svg>`
           : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
                <path d="M16 12V4H17V2H7V4H8V12L6 14V16H11V22H13V16H18V14L16 12Z"/>
              </svg>`;
-        
+
         pinBtn.innerHTML = pinIcon;
         pinBtn.title = isPinned ? 'Unpin chat' : 'Pin chat';
         pinBtn.classList.toggle('pinned', isPinned);
@@ -384,7 +388,7 @@ class ChatGPTNavigator {
     messageDiv.className = 'nav-message';
     messageDiv.textContent = message;
     document.body.appendChild(messageDiv);
-    
+
     setTimeout(() => {
       messageDiv.remove();
     }, 2000);
@@ -393,7 +397,7 @@ class ChatGPTNavigator {
   extractPromptText(element) {
     // Get the text content, handling various ChatGPT layouts
     let text = '';
-    
+
     // Try to find the actual message content
     const contentSelectors = [
       '.whitespace-pre-wrap',
@@ -418,7 +422,7 @@ class ChatGPTNavigator {
 
     // Clean up the text
     text = text.replace(/^(You:|User:)/i, '').trim();
-    
+
     // Truncate if too long
     if (text.length > 100) {
       text = text.substring(0, 97) + '...';
@@ -430,15 +434,15 @@ class ChatGPTNavigator {
   createPromptItem(text, element, number, isPinned = false) {
     const item = document.createElement('div');
     item.className = 'chatgpt-nav-prompt-item';
-    
-    const pinIcon = isPinned 
+
+    const pinIcon = isPinned
       ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
            <path d="M16 12V4H17V2H7V4H8V12L6 14V16H11V22H13V16H18V14L16 12Z"/>
          </svg>`
       : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
            <path d="M16 12V4H17V2H7V4H8V12L6 14V16H11V22H13V16H18V14L16 12Z"/>
          </svg>`;
-    
+
     item.innerHTML = `
       <div class="prompt-number">${number}</div>
       <div class="prompt-text">${this.escapeHtml(text)}</div>
@@ -468,11 +472,11 @@ class ChatGPTNavigator {
   createPinnedPromptItem(text, number, isPinned = true) {
     const item = document.createElement('div');
     item.className = 'chatgpt-nav-prompt-item pinned-item';
-    
+
     const pinIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
            <path d="M16 12V4H17V2H7V4H8V12L6 14V16H11V22H13V16H18V14L16 12Z"/>
          </svg>`;
-    
+
     item.innerHTML = `
       <div class="prompt-number">${number}</div>
       <div class="prompt-text">${this.escapeHtml(text)}</div>
@@ -515,7 +519,7 @@ class ChatGPTNavigator {
     ];
 
     let userMessages = [];
-    
+
     for (const selector of promptSelectors) {
       userMessages = document.querySelectorAll(selector);
       if (userMessages.length > 0) break;
@@ -527,8 +531,8 @@ class ChatGPTNavigator {
       userMessages = Array.from(allGroups).filter(el => {
         const text = el.textContent.trim();
         const hasUserIndicator = el.querySelector('[title*="user"], [alt*="user"], .user') ||
-                                el.textContent.includes('You:') ||
-                                el.getAttribute('data-message-author-role') === 'user';
+          el.textContent.includes('You:') ||
+          el.getAttribute('data-message-author-role') === 'user';
         return text.length > 0 && (hasUserIndicator || this.looksLikeUserMessage(el));
       });
     }
@@ -544,10 +548,10 @@ class ChatGPTNavigator {
       console.warn('Invalid element or scrollIntoView not available');
       return;
     }
-    
+
     // Smooth scroll to the element
-    element.scrollIntoView({ 
-      behavior: 'smooth', 
+    element.scrollIntoView({
+      behavior: 'smooth',
       block: 'start',
       inline: 'nearest'
     });
@@ -579,8 +583,8 @@ let navigator;
 
 function initNavigator() {
   // Check if we're on ChatGPT
-  if (window.location.hostname.includes('openai.com') || 
-      window.location.hostname.includes('chatgpt.com')) {
+  if (window.location.hostname.includes('openai.com') ||
+    window.location.hostname.includes('chatgpt.com')) {
     navigator = new ChatGPTNavigator();
   }
 }
