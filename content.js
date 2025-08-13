@@ -21,7 +21,7 @@ class ChatGPTNavigator {
   }
 
   getCurrentChatId() {
-    // Extract chat ID from URL like https://chatgpt.com/c/6898f7d8-4b04-832d-992b-03c8fd267b65
+    // Extract chat ID from URL like https://chatgpt.com/c/chat-code
     const url = window.location.href;
     const match = url.match(/\/c\/([a-f0-9-]+)/);
     return match ? match[1] : null;
